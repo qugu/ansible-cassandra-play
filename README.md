@@ -1,6 +1,5 @@
 # ansible-cassandra-play
-Rollout Cassandra in a virtual environment using a pre-created role.
-Requires a Linux or Mac machine that can run ansible.
+Rollout Cassandra in a virtual environment using a pre-created role. Requires a Linux or Mac machine that can run ansible. The playbook uses https://github.com/locp/ansible-role-cassandra as the underlying role.
 
 ### How to use this repository:
 1. Make sure you have ansible (at least 2.7) installed on your machine:

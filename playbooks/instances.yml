@@ -1,0 +1,54 @@
+---
+- name: Create or remove EC2 machines for running Cassandra
+  gather_facts: true
+  hosts: localhost
+  vars:
+    region: eu-west-1
+    instance_count: 4
+  tasks:
+    - name: Create a new EC2 keypair
+      tags: create
+      ec2_key:
+          name: cassandra-key
+          region: eu-west-1
+      register: ec2_key_result
+
+    - name: Delete the EC2 keypair
+      tags: remove
+      ec2_key:
+          name: cassandra-key
+          region: "{{ var.region }}"
+          state: absent
+
+    - name: Save private key to a local location
+      tags: create
+      copy: 
+        content: "{{ ec2_key_result.key.private_key }}"
+        dest: "cassandra_private.pem"
+        mode: 0600
+      when: ec2_key_result.changed
+
+    - name: Remove the private key file from disk
+      tags: remove
+      file:
+        path: "cassandra_private.pem"
+        state: absent
+
+    - name: Create server instances for the Cassandra cluster
+      tags: create
+      ec2:
+        count: "{{ instance_count }}"
+        key_name: "cassandra-key"
+        region: eu-west-1
+        instance_type: t3.medium
+        group: default
+        image: ami-0f630a3f40b1eb0b8
+        instance_tags:
+          application: cassandra
+
+    - name: Terminate the cassandra server instances
+      tags: remove
+      ec2:
+        state: terminated
+        tags:
+          application: cassandra
