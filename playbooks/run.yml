@@ -17,7 +17,7 @@
       tags: remove
       ec2_key:
           name: cassandra-key
-          region: "{{ var.region }}"
+          region: "{{ region }}"
           state: absent
 
     - name: Save private key to a local location
@@ -49,6 +49,11 @@
     - name: Terminate the cassandra server instances
       tags: remove
       ec2:
-        state: terminated
-        tags:
+        state: absent
+        region: "{{ region }}"
+        instance_tags:
           application: cassandra
+
+    - name: Run the cassandra deployment
+      tags: create
+      include_tasks: tasks/cassandra.yml
