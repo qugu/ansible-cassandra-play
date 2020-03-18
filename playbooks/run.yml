@@ -54,6 +54,6 @@
         instance_tags:
           application: cassandra
 
-    - name: Run the cassandra deployment
-      tags: create
-      include_tasks: tasks/cassandra.yml
+    # - name: Run the cassandra deployment
+    #   tags: create
+    #   include_tasks: tasks/cassandra.yml

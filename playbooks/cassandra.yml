@@ -1,3 +1,4 @@
+---
 - hosts: tag_application_cassandra
   become: true
   vars:
